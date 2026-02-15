@@ -1,0 +1,15 @@
+{
+  "name": "nomthis",
+  "version": "1.0.0",
+  "description": "What's in your fridge? Get a recipe.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "dotenv": "^17.3.1",
+    "express": "^4.21.0",
+    "express-rate-limit": "^7.4.0"
+  }
+}
