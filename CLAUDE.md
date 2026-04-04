@@ -4,27 +4,31 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-nomthis is an AI-powered recipe generator. Users type ingredients they have on hand, and the app returns a recipe via the Claude API. Live at nomthis.com.
+nomthis is an AI-powered recipe generator with selectable celebrity chef personalities. Users type ingredients or snap a photo of their fridge, pick a personality, and get a streaming recipe. Live at nomthis.com.
 
 ## Architecture
 
 Single-file Express server (`server.js`) serving a single-page frontend (`public/index.html`). No build step, no framework, no bundler.
 
-- **Backend**: Express + `@anthropic-ai/sdk`. One POST endpoint (`/api/recipe`) that sends ingredients to Claude and returns a markdown recipe. Rate-limited to 10 req/min per IP.
-- **Frontend**: Vanilla HTML/CSS/JS. Uses `marked` (CDN) to render markdown responses. Affiliate links (Amazon tag `nomthis-20`) are styled into cards client-side by wrapping "buy"/"gear" `<h2>` sections.
+- **Backend**: Express + `openai` SDK (GPT-4o-mini for both text and vision). Three endpoints:
+  - `POST /api/recipe` — streams a recipe via SSE with selectable personality
+  - `POST /api/identify` — accepts image upload (multer), identifies ingredients via vision API
+  - `GET /api/personalities` — returns personality roster (without system prompts)
+- **Personalities**: Defined in `personalities.json`. Each has an id, name, tagline, and systemPrompt. A shared `BASE_FORMAT` constant in server.js defines the recipe output format.
+- **Frontend**: Vanilla HTML/CSS/JS. Uses `marked` (CDN) to render streaming markdown. Camera mode with client-side canvas resize to JPEG 1024px. Personality selector with localStorage persistence. Affiliate links (Amazon tag `nomthis-20`) wrapped after stream completes.
 - **Analytics**: Plausible (self-hosted script).
+- **Rate limiting**: 10 req/min for text, 5 req/min for vision.
 
 ## Commands
 
 ```bash
 npm start          # Start the server (node server.js)
+npm test           # Run API tests (node:test)
 ```
-
-No test suite, no linter, no build step.
 
 ## Environment
 
-Requires `ANTHROPIC_API_KEY` in `.env` (see `.env.example`). Server defaults to port 3000.
+Requires `OPENAI_API_KEY` in `.env` (see `.env.example`). Server defaults to port 3000.
 
 ## Deployment
 
