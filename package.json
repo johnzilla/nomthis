@@ -4,12 +4,14 @@
   "description": "What's in your fridge? Get a recipe.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node --test test/api.test.js"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.39.0",
     "dotenv": "^17.3.1",
     "express": "^4.21.0",
-    "express-rate-limit": "^7.4.0"
+    "express-rate-limit": "^7.4.0",
+    "multer": "^2.1.1",
+    "openai": "^6.33.0"
   }
 }

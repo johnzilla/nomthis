@@ -13,6 +13,6 @@ spec:
       instance_size_slug: apps-s-1vcpu-0.5gb
       http_port: 3000
       envs:
-        - key: ANTHROPIC_API_KEY
+        - key: OPENAI_API_KEY
           scope: RUN_TIME
           type: SECRET
