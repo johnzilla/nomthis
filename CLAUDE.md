@@ -30,6 +30,12 @@ npm test           # Run API tests (node:test)
 
 Requires `OPENAI_API_KEY` in `.env` (see `.env.example`). Server defaults to port 3000.
 
+## Design System
+Always read DESIGN.md before making any visual or UI decisions.
+All font choices, colors, spacing, and aesthetic direction are defined there.
+Do not deviate without explicit user approval.
+In QA mode, flag any code that doesn't match DESIGN.md.
+
 ## Deployment
 
 DigitalOcean App Platform (`.do/app.yaml`). Deploys on push to `main`.
