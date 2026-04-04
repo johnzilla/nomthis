@@ -265,6 +265,17 @@
 
     #result.active { display: block; }
 
+    #chefBadge {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      padding: 4px 12px;
+      border-radius: 4px;
+      background: var(--accent);
+      color: var(--card-bg);
+      margin-bottom: 12px;
+    }
+
     #result h1 {
       font-family: 'Fraunces', serif;
       font-size: 1.8rem;
@@ -561,6 +572,7 @@
     </div>
 
     <div id="result">
+      <span id="chefBadge" style="display:none"></span>
       <div id="recipe"></div>
       <div class="share-bar" id="shareBar">
         <button onclick="remix()" id="remixBtn">Remix</button>
@@ -586,6 +598,8 @@
     let recipeTitle = "";
     let recipeText = "";
     let selectedPersonality = localStorage.getItem("personality") || "classic";
+    let selectedPersonalityName = "The Classic";
+    let personalityData = {};
 
     if (navigator.share) {
       document.getElementById("nativeShareBtn").style.display = "";
@@ -598,6 +612,7 @@
 
     function selectCard(card, id) {
       selectedPersonality = id;
+      selectedPersonalityName = personalityData[id]?.name || "The Classic";
       localStorage.setItem("personality", id);
       selectorEl.querySelectorAll(".personality-card").forEach(c => {
         c.classList.remove("selected");
@@ -620,7 +635,15 @@
         card.setAttribute("aria-checked", isSelected ? "true" : "false");
         card.setAttribute("tabindex", isSelected ? "0" : "-1");
         card.innerHTML = `<div class="name">${p.name}</div><div class="tagline">${p.tagline}</div>${p.quote ? '<div class="quote">"' + p.quote + '"</div>' : ''}${p.premium ? '<div class="lock">Premium</div>' : ''}`;
-        card.addEventListener("click", () => selectCard(card, p.id));
+        personalityData[p.id] = p;
+        card.addEventListener("click", () => {
+          if (p.premium) {
+            showError(`${p.name} is a premium personality. Coming soon!`);
+            setTimeout(hideError, 3000);
+            return;
+          }
+          selectCard(card, p.id);
+        });
         card.addEventListener("keydown", (e) => {
           const cards = [...selectorEl.querySelectorAll(".personality-card")];
           const idx = cards.indexOf(card);
@@ -855,6 +878,10 @@
         }
 
         loading.classList.remove("active");
+        // Show chef attribution
+        const chefBadge = document.getElementById("chefBadge");
+        chefBadge.textContent = selectedPersonalityName;
+        chefBadge.style.display = "inline-block";
         result.classList.add("active");
         result.scrollIntoView({ behavior: "smooth", block: "start" });
 
