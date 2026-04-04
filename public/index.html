@@ -21,6 +21,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=Manrope:wght@400;500;600;700&family=Bebas+Neue&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
   <style>
     :root {
       --accent: #EF5B2A;
@@ -905,9 +906,9 @@
 
             if (event.type === "token") {
               recipeText += event.text;
-              recipeEl.innerHTML = marked.parse(recipeText);
+              recipeEl.innerHTML = DOMPurify.sanitize(marked.parse(recipeText));
             } else if (event.type === "done") {
-              recipeEl.innerHTML = marked.parse(recipeText);
+              recipeEl.innerHTML = DOMPurify.sanitize(marked.parse(recipeText));
               wrapAffiliateCards();
               recipeTitle = recipeEl.querySelector("h1")?.textContent || "a recipe";
               shareBar.classList.add("active");
