@@ -74,23 +74,58 @@
       margin-top: 8px;
     }
 
+    .personality-carousel {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .carousel-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text-mid);
+      font-size: 1.2rem;
+      cursor: pointer;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, border-color 0.15s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .carousel-arrow:hover {
+      background: var(--accent-light);
+      border-color: var(--accent);
+    }
+
+    .carousel-arrow.left { left: -18px; }
+    .carousel-arrow.right { right: -18px; }
+    .carousel-arrow.hidden { display: none; }
+
     .personality-selector {
       display: flex;
       gap: 10px;
       overflow-x: auto;
-      padding: 4px 4px 16px;
-      margin-bottom: 20px;
+      padding: 4px 4px 8px;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
       align-items: stretch;
+      scroll-behavior: smooth;
+      scroll-snap-type: x mandatory;
     }
 
     .personality-selector::-webkit-scrollbar { display: none; }
 
     .personality-card {
-      flex: 1 1 0;
-      min-width: 0;
-      padding: 12px 8px;
+      flex: 0 0 140px;
+      scroll-snap-align: start;
+      padding: 14px 12px;
       border: 2px solid var(--border);
       border-radius: 12px;
       background: var(--card-bg);
@@ -334,12 +369,10 @@
       header p { font-size: 1rem; }
       #result { padding: 16px; }
 
-      .personality-selector {
-        overflow-x: auto;
-      }
+      .carousel-arrow { display: none; }
 
       .personality-card {
-        flex: 0 0 100px;
+        flex: 0 0 120px;
         padding: 10px 8px;
         min-height: 44px;
       }
@@ -472,7 +505,11 @@
       <p>Nom this.</p>
     </header>
 
-    <div class="personality-selector" id="personalitySelector"></div>
+    <div class="personality-carousel">
+      <button class="carousel-arrow left hidden" id="carouselLeft" aria-label="Scroll left">&#8249;</button>
+      <div class="personality-selector" id="personalitySelector"></div>
+      <button class="carousel-arrow right" id="carouselRight" aria-label="Scroll right">&#8250;</button>
+    </div>
 
     <div class="input-area">
       <textarea id="ingredients" placeholder="chicken thighs, rice, soy sauce, garlic, ginger..." maxlength="500"></textarea>
@@ -579,7 +616,26 @@
         });
         selectorEl.appendChild(card);
       });
+      updateArrows();
     });
+
+    // Carousel arrows
+    const arrowLeft = document.getElementById("carouselLeft");
+    const arrowRight = document.getElementById("carouselRight");
+
+    function updateArrows() {
+      const { scrollLeft, scrollWidth, clientWidth } = selectorEl;
+      arrowLeft.classList.toggle("hidden", scrollLeft <= 4);
+      arrowRight.classList.toggle("hidden", scrollLeft + clientWidth >= scrollWidth - 4);
+    }
+
+    arrowLeft.addEventListener("click", () => {
+      selectorEl.scrollBy({ left: -150, behavior: "smooth" });
+    });
+    arrowRight.addEventListener("click", () => {
+      selectorEl.scrollBy({ left: 150, behavior: "smooth" });
+    });
+    selectorEl.addEventListener("scroll", updateArrows);
 
     // Camera mode
     const cameraBtn = document.getElementById("cameraBtn");
