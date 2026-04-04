@@ -17,33 +17,41 @@
     window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
     plausible.init()
   </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=Manrope:wght@400;500;600;700&family=Bebas+Neue&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     :root {
-      --accent: #f97316;
-      --accent-hover: #ea580c;
-      --accent-light: #fff7ed;
-      --accent-border: #fed7aa;
-      --accent-dark: #9a3412;
-      --accent-brown: #b45309;
-      --border: #e0e0e0;
-      --bg: #fafaf8;
-      --card-bg: #fff;
-      --text: #1a1a1a;
-      --text-dark: #111;
-      --text-mid: #333;
-      --text-light: #666;
-      --text-muted: #888;
-      --text-faint: #aaa;
-      --error: #dc2626;
-      --affiliate-bg: #fef9f3;
-      --affiliate-border: #fde0b8;
+      --accent: #EF5B2A;
+      --accent-hover: #B93817;
+      --accent-light: #FFF0EC;
+      --accent-border: #FFCDB8;
+      --accent-dark: #B93817;
+      --accent-brown: #B93817;
+      --highlight: #FFD15C;
+      --border: #D8BFA7;
+      --bg: #F5EADB;
+      --card-bg: #FFF8EF;
+      --text: #2A211D;
+      --text-dark: #2A211D;
+      --text-mid: #2A211D;
+      --text-light: #6F6259;
+      --text-muted: #6F6259;
+      --text-faint: #9A8E82;
+      --error: #CC1100;
+      --affiliate-bg: #FFF5E6;
+      --affiliate-border: #FFD15C;
+      --chef-gary: #FF2E00;
+      --chef-gordo: #FFB800;
+      --chef-nonna: #2D8C3C;
+      --chef-coach: #3B82F6;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: 'Manrope', sans-serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.6;
@@ -62,13 +70,15 @@
     }
 
     header h1 {
+      font-family: 'Fraunces', serif;
       font-size: 2.8rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
+      font-weight: 900;
+      letter-spacing: -0.03em;
       color: var(--text-dark);
     }
 
     header p {
+      font-family: 'Manrope', sans-serif;
       font-size: 1.2rem;
       color: var(--text-light);
       margin-top: 8px;
@@ -127,7 +137,7 @@
       scroll-snap-align: start;
       padding: 14px 12px;
       border: 2px solid var(--border);
-      border-radius: 12px;
+      border-radius: 8px;
       background: var(--card-bg);
       cursor: pointer;
       transition: border-color 0.2s, background 0.2s;
@@ -139,9 +149,11 @@
     .personality-card.selected {
       border-color: var(--accent);
       background: var(--accent-light);
+      box-shadow: 3px 3px 0 var(--accent);
     }
 
     .personality-card .name {
+      font-family: 'Fraunces', serif;
       font-weight: 700;
       font-size: 0.95rem;
       color: var(--text-dark);
@@ -182,7 +194,7 @@
       min-height: 120px;
       padding: 16px;
       border: 2px solid var(--border);
-      border-radius: 12px;
+      border-radius: 8px;
       font-size: 1rem;
       font-family: inherit;
       resize: vertical;
@@ -204,14 +216,16 @@
       background: var(--accent);
       color: var(--card-bg);
       border: none;
-      border-radius: 12px;
-      font-size: 1.1rem;
-      font-weight: 700;
+      border-radius: 8px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 0.06em;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: transform 0.1s;
+      box-shadow: 3px 3px 0 var(--accent-hover);
     }
 
-    button#submit:hover { background: var(--accent-hover); }
+    button#submit:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--accent-hover); }
     button#submit:disabled { background: #ccc; cursor: not-allowed; }
 
     .loading {
@@ -243,8 +257,8 @@
     #result {
       display: none;
       background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
       padding: 32px;
       margin-bottom: 40px;
     }
@@ -252,18 +266,22 @@
     #result.active { display: block; }
 
     #result h1 {
+      font-family: 'Fraunces', serif;
       font-size: 1.8rem;
-      font-weight: 800;
+      font-weight: 900;
       margin-bottom: 8px;
       color: var(--text-dark);
     }
 
     #result h2 {
-      font-size: 1.2rem;
-      font-weight: 700;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.1em;
       margin-top: 24px;
       margin-bottom: 8px;
-      color: var(--text-mid);
+      padding-bottom: 4px;
+      border-bottom: 2px solid var(--border);
+      color: var(--accent);
     }
 
     #result p { margin-bottom: 8px; }
@@ -288,7 +306,7 @@
     .affiliate-section {
       background: var(--affiliate-bg);
       border: 1px solid var(--affiliate-border);
-      border-radius: 12px;
+      border-radius: 8px;
       padding: 20px 24px;
       margin-top: 24px;
     }
@@ -406,15 +424,17 @@
       background: var(--card-bg);
       color: var(--accent);
       border: 2px solid var(--accent);
-      border-radius: 12px;
-      font-size: 1rem;
-      font-weight: 700;
+      border-radius: 8px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 0.06em;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: transform 0.1s;
       min-height: 50px;
+      box-shadow: 3px 3px 0 var(--border);
     }
 
-    .camera-btn:hover { background: var(--accent-light); }
+    .camera-btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--border); }
 
     #cameraInput { display: none; }
 
@@ -475,13 +495,16 @@
       background: var(--accent);
       color: var(--card-bg);
       border: none;
-      border-radius: 12px;
-      font-size: 1.1rem;
-      font-weight: 700;
+      border-radius: 8px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 0.06em;
       cursor: pointer;
+      box-shadow: 3px 3px 0 var(--accent-hover);
+      transition: transform 0.1s;
     }
 
-    .tag-generate-btn:hover { background: var(--accent-hover); }
+    .tag-generate-btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--accent-hover); }
 
     #visionLoading {
       display: none;
