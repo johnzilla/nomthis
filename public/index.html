@@ -19,12 +19,33 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
+    :root {
+      --accent: #f97316;
+      --accent-hover: #ea580c;
+      --accent-light: #fff7ed;
+      --accent-border: #fed7aa;
+      --accent-dark: #9a3412;
+      --accent-brown: #b45309;
+      --border: #e0e0e0;
+      --bg: #fafaf8;
+      --card-bg: #fff;
+      --text: #1a1a1a;
+      --text-dark: #111;
+      --text-mid: #333;
+      --text-light: #666;
+      --text-muted: #888;
+      --text-faint: #aaa;
+      --error: #dc2626;
+      --affiliate-bg: #fef9f3;
+      --affiliate-border: #fde0b8;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: #fafaf8;
-      color: #1a1a1a;
+      background: var(--bg);
+      color: var(--text);
       line-height: 1.6;
       min-height: 100vh;
     }
@@ -44,14 +65,77 @@
       font-size: 2.8rem;
       font-weight: 800;
       letter-spacing: -0.02em;
-      color: #111;
+      color: var(--text-dark);
     }
 
     header p {
       font-size: 1.2rem;
-      color: #666;
+      color: var(--text-light);
       margin-top: 8px;
     }
+
+    .personality-selector {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 4px 0 16px;
+      margin-bottom: 20px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .personality-selector::-webkit-scrollbar { display: none; }
+
+    .personality-card {
+      flex: 0 0 auto;
+      min-width: 130px;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: var(--card-bg);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      text-align: center;
+    }
+
+    .personality-card:hover { border-color: var(--accent); }
+
+    .personality-card.selected {
+      border-color: var(--accent);
+      background: var(--accent-light);
+    }
+
+    .personality-card .name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-dark);
+    }
+
+    .personality-card .tagline {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .personality-card .quote {
+      font-size: 0.7rem;
+      font-style: italic;
+      color: var(--text-light);
+      margin-top: 4px;
+    }
+
+    .personality-card .lock {
+      font-size: 0.7rem;
+      color: var(--accent);
+      margin-top: 4px;
+    }
+
+    .personality-card:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .input-area.hidden { display: none; }
 
     .input-area {
       margin-bottom: 32px;
@@ -61,29 +145,28 @@
       width: 100%;
       min-height: 120px;
       padding: 16px;
-      border: 2px solid #e0e0e0;
+      border: 2px solid var(--border);
       border-radius: 12px;
       font-size: 1rem;
       font-family: inherit;
       resize: vertical;
       transition: border-color 0.2s;
-      background: #fff;
+      background: var(--card-bg);
     }
 
     textarea:focus {
       outline: none;
-      border-color: #f97316;
+      border-color: var(--accent);
     }
 
-    textarea::placeholder { color: #aaa; }
+    textarea::placeholder { color: var(--text-faint); }
 
     button#submit {
       display: block;
-      width: 100%;
-      margin-top: 12px;
+      flex: 1;
       padding: 14px;
-      background: #f97316;
-      color: #fff;
+      background: var(--accent);
+      color: var(--card-bg);
       border: none;
       border-radius: 12px;
       font-size: 1.1rem;
@@ -92,7 +175,7 @@
       transition: background 0.2s;
     }
 
-    button#submit:hover { background: #ea580c; }
+    button#submit:hover { background: var(--accent-hover); }
     button#submit:disabled { background: #ccc; cursor: not-allowed; }
 
     .loading {
@@ -107,8 +190,8 @@
       display: inline-block;
       width: 32px;
       height: 32px;
-      border: 3px solid #e0e0e0;
-      border-top-color: #f97316;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
     }
@@ -117,14 +200,14 @@
 
     .loading p {
       margin-top: 12px;
-      color: #888;
+      color: var(--text-muted);
       font-size: 0.95rem;
     }
 
     #result {
       display: none;
-      background: #fff;
-      border: 1px solid #e8e8e8;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
       border-radius: 16px;
       padding: 32px;
       margin-bottom: 40px;
@@ -136,7 +219,7 @@
       font-size: 1.8rem;
       font-weight: 800;
       margin-bottom: 8px;
-      color: #111;
+      color: var(--text-dark);
     }
 
     #result h2 {
@@ -144,7 +227,7 @@
       font-weight: 700;
       margin-top: 24px;
       margin-bottom: 8px;
-      color: #333;
+      color: var(--text-mid);
     }
 
     #result p { margin-bottom: 8px; }
@@ -157,7 +240,7 @@
     #result li { margin-bottom: 4px; }
 
     #result a {
-      color: #f97316;
+      color: var(--accent);
       text-decoration: none;
       font-weight: 500;
     }
@@ -167,8 +250,8 @@
     #result strong { font-weight: 700; }
 
     .affiliate-section {
-      background: #fef9f3;
-      border: 1px solid #fde0b8;
+      background: var(--affiliate-bg);
+      border: 1px solid var(--affiliate-border);
       border-radius: 12px;
       padding: 20px 24px;
       margin-top: 24px;
@@ -176,13 +259,13 @@
 
     .affiliate-section h2 {
       margin-top: 0 !important;
-      color: #b45309;
+      color: var(--accent-brown);
     }
 
     .affiliate-section a {
       display: inline-block;
-      background: #f97316;
-      color: #fff !important;
+      background: var(--accent);
+      color: var(--card-bg) !important;
       padding: 6px 14px;
       border-radius: 6px;
       font-size: 0.9rem;
@@ -191,7 +274,7 @@
     }
 
     .affiliate-section a:hover {
-      background: #ea580c;
+      background: var(--accent-hover);
       text-decoration: none !important;
     }
 
@@ -201,35 +284,35 @@
       gap: 8px;
       margin-top: 24px;
       padding-top: 20px;
-      border-top: 1px solid #eee;
+      border-top: 1px solid var(--border);
     }
 
     .share-bar.active { display: flex; }
 
     .share-bar button {
       padding: 8px 16px;
-      border: 1px solid #ddd;
+      border: 1px solid var(--border);
       border-radius: 8px;
-      background: #fff;
+      background: var(--card-bg);
       font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
-      color: #444;
+      color: var(--text-mid);
       transition: background 0.15s;
     }
 
     .share-bar button:hover { background: #f5f5f5; }
 
     .share-bar button#remixBtn {
-      background: #f97316;
-      color: #fff;
-      border-color: #f97316;
+      background: var(--accent);
+      color: var(--card-bg);
+      border-color: var(--accent);
     }
 
-    .share-bar button#remixBtn:hover { background: #ea580c; border-color: #ea580c; }
+    .share-bar button#remixBtn:hover { background: var(--accent-hover); border-color: #ea580c; }
 
     .error {
-      color: #dc2626;
+      color: var(--error);
       text-align: center;
       padding: 12px;
       display: none;
@@ -240,14 +323,140 @@
     footer {
       text-align: center;
       padding: 40px 0;
-      color: #aaa;
+      color: var(--text-faint);
       font-size: 0.85rem;
     }
 
     @media (max-width: 480px) {
-      header { padding: 40px 0 28px; }
+      header { padding: 40px 0 20px; }
       header h1 { font-size: 2.2rem; }
-      #result { padding: 20px; }
+      header p { font-size: 1rem; }
+      #result { padding: 16px; }
+
+      .personality-card {
+        min-width: 110px;
+        padding: 10px 12px;
+        min-height: 44px;
+      }
+
+      .personality-card .name { font-size: 0.85rem; }
+      .personality-card .tagline { font-size: 0.7rem; }
+
+      textarea { min-height: 100px; font-size: 16px; }
+
+      button#submit {
+        padding: 16px;
+        font-size: 1.15rem;
+        min-height: 50px;
+      }
+
+      .share-bar button {
+        padding: 10px 14px;
+        min-height: 44px;
+      }
+    }
+
+    .camera-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .camera-btn {
+      flex: 0 0 auto;
+      padding: 14px 20px;
+      background: var(--card-bg);
+      color: var(--accent);
+      border: 2px solid var(--accent);
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      min-height: 50px;
+    }
+
+    .camera-btn:hover { background: var(--accent-light); }
+
+    #cameraInput { display: none; }
+
+    .tag-editor {
+      display: none;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 12px 0;
+    }
+
+    .tag-editor.active { display: flex; }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: var(--accent-light);
+      border: 1px solid var(--accent-border);
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--accent-dark);
+    }
+
+    .tag .remove {
+      cursor: pointer;
+      font-size: 1.1rem;
+      line-height: 1;
+      color: var(--accent);
+    }
+
+    .tag .remove:hover { color: var(--error); }
+
+    .add-tag-input {
+      border: 1px dashed var(--border);
+      border-radius: 20px;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      outline: none;
+      min-width: 120px;
+      background: var(--card-bg);
+    }
+
+    .add-tag-input:focus { border-color: var(--accent); }
+
+    .tag-actions {
+      display: none;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .tag-actions.active { display: flex; }
+
+    .tag-generate-btn {
+      flex: 1;
+      padding: 14px;
+      background: var(--accent);
+      color: var(--card-bg);
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .tag-generate-btn:hover { background: var(--accent-hover); }
+
+    #visionLoading {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    #visionLoading.active { display: block; }
+
+    #visionLoading p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: 8px;
     }
   </style>
 </head>
@@ -258,9 +467,25 @@
       <p>Nom this.</p>
     </header>
 
+    <div class="personality-selector" id="personalitySelector"></div>
+
     <div class="input-area">
       <textarea id="ingredients" placeholder="chicken thighs, rice, soy sauce, garlic, ginger..." maxlength="500"></textarea>
-      <button id="submit">Nom This</button>
+      <div class="camera-row">
+        <button id="submit">Nom This</button>
+        <button class="camera-btn" id="cameraBtn" aria-label="Snap your fridge to identify ingredients">📷 Snap Fridge</button>
+        <input type="file" id="cameraInput" accept="image/*" capture="environment">
+      </div>
+    </div>
+
+    <div id="visionLoading">
+      <div class="spinner"></div>
+      <p id="visionStatus">Looking in your fridge...</p>
+    </div>
+
+    <div class="tag-editor" id="tagEditor"></div>
+    <div class="tag-actions" id="tagActions">
+      <button class="tag-generate-btn" id="tagGenerateBtn">Nom This</button>
     </div>
 
     <div class="error" id="error"></div>
@@ -295,9 +520,228 @@
 
     let recipeTitle = "";
     let recipeText = "";
+    let selectedPersonality = localStorage.getItem("personality") || "classic";
 
     if (navigator.share) {
       document.getElementById("nativeShareBtn").style.display = "";
+    }
+
+    // Load and render personality selector
+    const selectorEl = document.getElementById("personalitySelector");
+    selectorEl.setAttribute("role", "radiogroup");
+    selectorEl.setAttribute("aria-label", "Choose a chef personality");
+
+    function selectCard(card, id) {
+      selectedPersonality = id;
+      localStorage.setItem("personality", id);
+      selectorEl.querySelectorAll(".personality-card").forEach(c => {
+        c.classList.remove("selected");
+        c.setAttribute("aria-checked", "false");
+        c.setAttribute("tabindex", "-1");
+      });
+      card.classList.add("selected");
+      card.setAttribute("aria-checked", "true");
+      card.setAttribute("tabindex", "0");
+      card.focus();
+    }
+
+    fetch("/api/personalities").then(r => r.json()).then(personalities => {
+      personalities.forEach((p, i) => {
+        const card = document.createElement("div");
+        const isSelected = p.id === selectedPersonality;
+        card.className = "personality-card" + (isSelected ? " selected" : "");
+        card.dataset.id = p.id;
+        card.setAttribute("role", "radio");
+        card.setAttribute("aria-checked", isSelected ? "true" : "false");
+        card.setAttribute("tabindex", isSelected ? "0" : "-1");
+        card.innerHTML = `<div class="name">${p.name}</div><div class="tagline">${p.tagline}</div>${p.quote ? '<div class="quote">"' + p.quote + '"</div>' : ''}${p.premium ? '<div class="lock">Premium</div>' : ''}`;
+        card.addEventListener("click", () => selectCard(card, p.id));
+        card.addEventListener("keydown", (e) => {
+          const cards = [...selectorEl.querySelectorAll(".personality-card")];
+          const idx = cards.indexOf(card);
+          if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+            e.preventDefault();
+            const next = cards[(idx + 1) % cards.length];
+            selectCard(next, next.dataset.id);
+          } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+            e.preventDefault();
+            const prev = cards[(idx - 1 + cards.length) % cards.length];
+            selectCard(prev, prev.dataset.id);
+          } else if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            selectCard(card, p.id);
+          }
+        });
+        selectorEl.appendChild(card);
+      });
+    });
+
+    // Camera mode
+    const cameraBtn = document.getElementById("cameraBtn");
+    const cameraInput = document.getElementById("cameraInput");
+    const visionLoading = document.getElementById("visionLoading");
+    const visionStatus = document.getElementById("visionStatus");
+    const tagEditor = document.getElementById("tagEditor");
+    const tagActions = document.getElementById("tagActions");
+    const tagGenerateBtn = document.getElementById("tagGenerateBtn");
+
+    const visionMessages = [
+      "Looking in your fridge...",
+      "Checking the crisper drawer...",
+      "Identifying ingredients...",
+      "Spotting what's fresh...",
+      "Almost done...",
+    ];
+
+    cameraBtn.addEventListener("click", () => cameraInput.click());
+
+    cameraInput.addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      hideError();
+      tagEditor.classList.remove("active");
+      tagActions.classList.remove("active");
+      visionLoading.classList.add("active");
+
+      // Rotating status messages
+      let msgIdx = 0;
+      visionStatus.textContent = visionMessages[0];
+      const msgInterval = setInterval(() => {
+        msgIdx = (msgIdx + 1) % visionMessages.length;
+        visionStatus.textContent = visionMessages[msgIdx];
+      }, 1500);
+
+      try {
+        const resized = await resizeImage(file, 1024, 0.8);
+        const formData = new FormData();
+        formData.append("image", resized, "photo.jpg");
+
+        const res = await fetch("/api/identify", { method: "POST", body: formData });
+        const data = await res.json();
+
+        clearInterval(msgInterval);
+        visionLoading.classList.remove("active");
+
+        if (data.fallback && data.ingredients?.length === 0) {
+          showError(data.error || "Couldn't identify ingredients. Try typing them.");
+          return;
+        }
+        if (!res.ok) {
+          showError(data.error || "Something went wrong with the image.");
+          return;
+        }
+
+        renderTags(data.ingredients);
+      } catch (err) {
+        clearInterval(msgInterval);
+        visionLoading.classList.remove("active");
+        showError("Couldn't process the image. Try typing your ingredients instead.");
+      }
+
+      cameraInput.value = "";
+    });
+
+    function resizeImage(file, maxSize, quality) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          let { width, height } = img;
+          if (width > maxSize || height > maxSize) {
+            if (width > height) {
+              height = Math.round((height * maxSize) / width);
+              width = maxSize;
+            } else {
+              width = Math.round((width * maxSize) / height);
+              height = maxSize;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+          canvas.toBlob(resolve, "image/jpeg", quality);
+        };
+        img.src = URL.createObjectURL(file);
+      });
+    }
+
+    const inputArea = document.querySelector(".input-area");
+
+    function dismissTags() {
+      tagEditor.classList.remove("active");
+      tagActions.classList.remove("active");
+      inputArea.classList.remove("hidden");
+    }
+
+    function renderTags(ingredients) {
+      tagEditor.innerHTML = "";
+      ingredients.forEach(name => addTag(name));
+      const addInput = document.createElement("input");
+      addInput.className = "add-tag-input";
+      addInput.placeholder = "+ add";
+      addInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && addInput.value.trim()) {
+          addTag(addInput.value.trim());
+          tagEditor.insertBefore(tagEditor.lastElementChild, addInput);
+          addInput.value = "";
+          tagEditor.appendChild(addInput);
+        }
+      });
+      tagEditor.appendChild(addInput);
+
+      // "Type instead" link
+      const typeLink = document.createElement("a");
+      typeLink.href = "#";
+      typeLink.textContent = "type instead";
+      typeLink.style.cssText = "font-size:0.8rem;color:var(--text-muted);margin-left:auto;align-self:center;";
+      typeLink.addEventListener("click", (e) => { e.preventDefault(); dismissTags(); });
+      tagEditor.appendChild(typeLink);
+
+      tagEditor.classList.add("active");
+      tagActions.classList.add("active");
+      inputArea.classList.add("hidden");
+    }
+
+    function addTag(name) {
+      const tag = document.createElement("span");
+      tag.className = "tag";
+      tag.innerHTML = `${name} <span class="remove">&times;</span>`;
+      tag.querySelector(".remove").addEventListener("click", () => tag.remove());
+      tagEditor.appendChild(tag);
+    }
+
+    tagGenerateBtn.addEventListener("click", () => {
+      const tags = Array.from(tagEditor.querySelectorAll(".tag"))
+        .map(t => t.firstChild.textContent.trim());
+      if (tags.length === 0) {
+        showError("Add some ingredients first.");
+        return;
+      }
+      form.value = tags.join(", ");
+      btn.click();
+    });
+
+    function wrapAffiliateCards() {
+      recipeEl.querySelectorAll("a[href]").forEach(a => {
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+      });
+      recipeEl.querySelectorAll("h2").forEach(h2 => {
+        const text = h2.textContent.toLowerCase();
+        if (text.includes("buy") || text.includes("gear")) {
+          const wrapper = document.createElement("div");
+          wrapper.className = "affiliate-section";
+          h2.before(wrapper);
+          wrapper.appendChild(h2);
+          let next = wrapper.nextSibling;
+          while (next && !(next.nodeType === 1 && next.tagName === "H2")) {
+            const current = next;
+            next = next.nextSibling;
+            wrapper.appendChild(current);
+          }
+        }
+      });
     }
 
     btn.addEventListener("click", async () => {
@@ -312,49 +756,58 @@
       loading.classList.add("active");
       result.classList.remove("active");
       shareBar.classList.remove("active");
+      recipeText = "";
 
       try {
         const res = await fetch("/api/recipe", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ingredients }),
+          body: JSON.stringify({ ingredients, personalityId: selectedPersonality }),
         });
 
-        const data = await res.json();
-
         if (!res.ok) {
+          const data = await res.json();
           throw new Error(data.error || "Something went wrong.");
         }
 
-        recipeText = data.recipe;
-        recipeEl.innerHTML = marked.parse(data.recipe);
-        recipeEl.querySelectorAll("a[href]").forEach(a => {
-          a.target = "_blank";
-          a.rel = "noopener noreferrer";
-        });
+        loading.classList.remove("active");
+        result.classList.add("active");
+        result.scrollIntoView({ behavior: "smooth", block: "start" });
 
-        // Wrap affiliate sections in styled cards
-        recipeEl.querySelectorAll("h2").forEach(h2 => {
-          const text = h2.textContent.toLowerCase();
-          if (text.includes("buy") || text.includes("gear")) {
-            const wrapper = document.createElement("div");
-            wrapper.className = "affiliate-section";
-            h2.before(wrapper);
-            wrapper.appendChild(h2);
-            let next = wrapper.nextSibling;
-            while (next && !(next.nodeType === 1 && next.tagName === "H2")) {
-              const current = next;
-              next = next.nextSibling;
-              wrapper.appendChild(current);
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n");
+          buffer = lines.pop();
+
+          for (const line of lines) {
+            if (!line.startsWith("data: ")) continue;
+            const json = line.slice(6);
+            let event;
+            try { event = JSON.parse(json); } catch { continue; }
+
+            if (event.type === "token") {
+              recipeText += event.text;
+              recipeEl.innerHTML = marked.parse(recipeText);
+            } else if (event.type === "done") {
+              recipeEl.innerHTML = marked.parse(recipeText);
+              wrapAffiliateCards();
+              recipeTitle = recipeEl.querySelector("h1")?.textContent || "a recipe";
+              shareBar.classList.add("active");
+            } else if (event.type === "error") {
+              throw new Error(event.message);
             }
           }
-        });
-        recipeTitle = recipeEl.querySelector("h1")?.textContent || "a recipe";
-        result.classList.add("active");
-        shareBar.classList.add("active");
-        result.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
       } catch (err) {
         showError(err.message);
+        result.classList.remove("active");
       } finally {
         btn.disabled = false;
         loading.classList.remove("active");
